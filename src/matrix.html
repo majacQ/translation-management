@@ -1,8 +1,12 @@
 ---
 title: W3C Recommendations - Translation needs
 layout: template
+description: Status of existing and ongoing translations of W3C Recommendations (authorized and volunteer translations)
+image: https://www.w3.org/Consortium/Translation/matrix-legend.png
 ---
+<p>See also the list of <strong><a href="/Translations/">completed translations of W3C Recommendations</a></strong>.</p>
 <p>This page shows which W3C Recommendations are being, have been or have not been translated. If a language does not appear in the table, it means no existing or ongoing translation is known.</p>
+<p>See also <strong><a href="https://www.w3.org/Consortium/Translation/">how to contribute</a></strong> to W3C translation efforts.</p>
 <p>Legend:</p>
 <dl class=legend>
 <dt class=outdated>✗</dt>
@@ -19,20 +23,25 @@ layout: template
 <table>
   <thead>
     <tr>
-      <th>Specification</th>
-      {% assign langs = site.data.langlist|sort %}
+      <th id="specs">Specification</th>
+      <th>Length (x1,000 words)</th>
+      {% assign langs = site.data.langlist|sort: "name" %}
       {% for lang in langs %}
       {% if site.data.byLanguage[lang].latestRecsTotal > 0 %}
-      <th><span title="{{site.data.lang[lang].nativeName}} ({{site.data.lang[lang].name}})">{{lang}}</span></th>
+      <th class=lang><div><span>{{site.data.lang[lang].name}}</span></div></th>
       {% endif %}
       {% endfor %}
     </tr>
   </thead>
-  <tbody>
     {% assign recs = site.data.recs | where: "isLatest", true | sort: "date" | reverse %}
-    {% for rec in recs %}
+    {% assign recsByYears = recs | group_by: "year" %}
+    {% for year in recsByYears %}
+  <tbody id="y{{year.name}}" aria-live="polite">
+    <tr><th colspan="{{ langs.size  }}">{{ year.name }}</th></tr>
+    {% for rec in year.items %}
     <tr>
-      <th scope="row"><a href="{{rec.shortlink}}">{{rec.title}}</a> (<time>{{rec.date}}</time>)</th>
+      <th scope="row"><a href="{{rec.shortlink}}">{{rec.title}}</a></th>
+      <td class=num>{% if site.data.wordCount[rec.shortname] %}{{ site.data.wordCount[rec.shortname] | divided_by: 1000 | round }}{% endif %}</td>
       {% for lang in langs %}
       {% if site.data.byLanguage[lang].latestRecsTotal > 0 %}
       <td{% if rec.translations %}
@@ -66,8 +75,10 @@ layout: template
     </tr>
     {% endfor %}
   </tbody>
+    {% endfor %}
   <tfoot>
     <th scope="row">{{ recs.size }} Recommendations</th>
+    <td></td>
     {% for lang in langs %}
     {% if site.data.byLanguage[lang].latestRecsTotal > 0 %}
     <td>{{ site.data.byLanguage[lang].latestRecsTotal }}</td>
@@ -75,5 +86,6 @@ layout: template
     {% endfor %}
   </tfoot>
 </table>
+<script src="filter.js"></script>
 <!-- TODO: non-RECS
 -->
