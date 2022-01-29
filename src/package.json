@@ -2,7 +2,7 @@
   "dependencies": {
     "node-w3capi": "^1.4.0",
     "viperhtml": "^2.17.0",
-    "vue": "^2.6.7",
+    "vue": "^3.2.26",
     "vue-server-renderer": "^2.6.7"
   },
   "devDependencies": {
